@@ -73,6 +73,31 @@ Every default below is a deliberately conservative starting value chosen before 
 | `limitCeilingPercent` | 0.25 | Half the normal margin, so LIMIT is always tighter than GO. Config refuses a ceiling above the GO value. |
 | `waitRecheckMinutes` | 15 | Re-check soon enough to catch a short outage, without polling the API constantly. |
 
+## The buy cap
+
+Bitstock refuses a buy above `BUY_MAX_USD`: **$250** by default (it was $5 in the first release, a cautious starting value with no recorded reason).
+
+The cap does not protect Bitstock's money, because Bitstock never holds a buyer's funds: the buyer signs every buy in their own wallet. It exists for three other reasons:
+
+- **A typing mistake should stay small.** Entering 250 instead of 25 is a $225 error; with no cap it could be far larger.
+- **The guard's numbers are not yet measured at size.** The first real buy was $1. The slippage rule is meant to be revised from real outcomes, and a modest cap lets that evidence build before the limit rises.
+- **Bitstock is for small-money investing** (ADR 0001). A cap keeps the product to what it says it is.
+
+The cap is not set by market depth. Live NVDAB quotes on 17 Oct 2026 (the guard run from the Railway agent, Singapore, price impact as quoted by Binance) showed:
+
+| Buy | Price impact |
+|---|---|
+| $5 | 0.0043% |
+| $50 | 0.0006% |
+| $100 | 0.0007% |
+| $250 | 0.0000% |
+| $500 | 0.0003% |
+| $1,000 | 0.0008% |
+
+All are hundreds of times below the 0.3% that warns and the 1% that blocks. The guard checks every buy at its exact size, so a buy too large for the pool is refused whatever the cap says.
+
+$250 was chosen by the owner on 17 Oct 2026 as a first step toward $500: half the typing risk of $500, fifty times the old cap. Raise it (set `BUY_MAX_USD`) once real buys at larger sizes show that fills match their quotes, and record each change here with the evidence.
+
 ## History
 
 | Rules version | Date | Change |
@@ -81,3 +106,4 @@ Every default below is a deliberately conservative starting value chosen before 
 | 1 | 2026-10-11 | Wording only: reasons are written for people (test run, shares per token, price impact rounded, with "less than 0.01%" for tiny figures; the exact figure stays in the record). Agentic Wallet exception to check 5 (ADR 0007); no threshold changed. |
 | 2 | 2026-10-17 | Check 5 also requires the test run to show USDT leaving the wallet by no more than the chosen amount. Before, only the stock arriving was checked, so a wallet that had approved more USDT earlier could have been asked to sign a trade that took more. No threshold changed. Recorded real simulation (`docs/evidence/guard-nvdab-1usd-after-approval.railway-sg.json`): a $1 buy shows exactly `-1000000000000000000` USDT. |
 | 2 | 2026-10-17 | Wording only: when the test run fails for lack of USDT, the reason says how much USDT the wallet holds on BNB Smart Chain and how much the buy needs (read with `balanceOf` and stored as an input). No outcome changes. |
+| 2 | 2026-10-17 | Not a rule change: the buy cap rises from $5 to $250 and its reason and the price impact measured up to $1,000 are written down (section "The buy cap"). No guard threshold changed. |

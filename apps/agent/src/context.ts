@@ -21,7 +21,7 @@ export interface AgentContext {
 
 export function buildContext(env: NodeJS.ProcessEnv): AgentContext {
   const cfg = guardConfigFromEnv(env);
-  const maxBuyUsd = env["BUY_MAX_USD"] || "5";
+  const maxBuyUsd = env["BUY_MAX_USD"] || "250";
   if (!/^\d{1,4}(\.\d{1,2})?$/.test(maxBuyUsd) || Number(maxBuyUsd) <= 0) throw new Error("BUY_MAX_USD must be a dollar amount above zero");
   const apiErrors = new Map<string, number>();
   const baseUrl = env["BINANCE_WEB3_BASE_URL"];

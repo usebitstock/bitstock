@@ -131,7 +131,7 @@ sequenceDiagram
 | Multiplier change | warn when one is scheduled within 24 hours | same |
 | Routes | quote-on-request (RFQ) routes refused because they cannot be dry-run | `packages/guard/src/rules.ts` |
 | Swap destination | refused unless it goes to the contract the quote named, from the buyer, with no BNB attached | same |
-| Largest buy | $5 | `BUY_MAX_USD` |
+| Largest buy | $250 by default, why in [`docs/METHOD.md`](docs/METHOD.md) | `BUY_MAX_USD` |
 | Kill switch | environment flag or authenticated admin call; survives restarts; cleared only with an explicit phrase | `apps/agent/src/killswitch.ts` |
 | Rate limits | 10 checks per minute per client | `RATE_LIMIT_PER_MINUTE` |
 

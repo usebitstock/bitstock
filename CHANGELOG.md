@@ -4,6 +4,9 @@ All notable changes are recorded here. The format follows Keep a Changelog and t
 
 ## [Unreleased]
 
+### Changed
+- The largest buy rises from $5 to $250 (`BUY_MAX_USD`, set on the live agent and now the code's default). The reason, and the live NVDAB price impact from $5 to $1,000 (under 0.001% at every size), are in `docs/METHOD.md` ("The buy cap"). The guard still checks every buy at its exact size.
+
 ### Added
 - Buy: a wallet that has not approved USDT yet can approve from the Buy page. The approval is for exactly the buy's amount, never more; the agent (`POST /v1/approvals`) only prepares it when Binance's quote and its approval endpoint name the same contract, and tests it first. Once it is confirmed, the buy is checked again automatically. Before, a first buy stopped at "Approve USDT in your wallet first" with no way to do that in the app.
 - Buy: a buy that has to wait now shows what Bitstock's later check found (still waiting, ready to check again, or a reason not to buy). WAIT decisions carry the `intentId` of that saved check.

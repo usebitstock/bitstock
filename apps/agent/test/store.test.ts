@@ -84,6 +84,11 @@ describe("request validation", () => {
     expect(validateRequest(ok, "5")).toEqual({ ...ok, executor: "own-wallet" });
     expect(validateRequest({ ...ok, executor: "agentic-wallet" }, "5").executor).toBe("agentic-wallet");
   });
+  it("allows exactly the cap and refuses one cent more, with the cap named in the message", () => {
+    expect(validateRequest({ ...ok, amountUsd: "250" }, "250").amountUsd).toBe("250");
+    expect(validateRequest({ ...ok, amountUsd: "250.00" }, "250").amountUsd).toBe("250.00");
+    expect(() => validateRequest({ ...ok, amountUsd: "250.01" }, "250")).toThrow("The most Bitstock will buy at once is $250.");
+  });
   it("refuses an unknown executor", () => {
     expect(() => validateRequest({ ...ok, executor: "server" }, "5")).toThrow(/executor/);
   });
